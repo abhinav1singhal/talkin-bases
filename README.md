@@ -1,2 +1,0 @@
-# talkin-bases
-Talkin’ Bases
