@@ -9,6 +9,10 @@ from llama_index.core.node_parser import SimpleNodeParser
 from llama_index.core.schema import BaseNode
 from llama_index.embeddings.gemini import GeminiEmbedding
 from llama_index.llms.gemini import Gemini
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 # Initialize the Gemini Embedding model
 embed_model = GeminiEmbedding(
@@ -46,7 +50,7 @@ file_patterns = {
 
 # Get the data folder path
 current_dir = os.path.dirname(os.path.abspath(__file__))
-data_folder = os.path.join(current_dir, "../data") 
+data_folder = os.path.join(current_dir, "./data") 
 
 # JSON Parsing Functions
 def parse_player_details(json_data: dict) -> List[BaseNode]:
@@ -93,10 +97,13 @@ def parse_schedule(json_data: dict) -> List[BaseNode]:
     nodes = []
     for date in json_data.get("dates", []):
         for game in date.get("games", []):
+            # Safely get scores with a default of "N/A" if the score is missing
+            away_score = game.get("teams", {}).get("away", {}).get("score", "N/A")
+            home_score = game.get("teams", {}).get("home", {}).get("score", "N/A")
             text = f"Game Date: {game['gameDate']}\n" \
                    f"Teams: {game['teams']['away']['team']['name']} vs {game['teams']['home']['team']['name']}\n" \
                    f"Venue: {game['venue']['name']}\n" \
-                   f"Score: {game['teams']['away']['score']} - {game['teams']['home']['score']}"
+                   f"Score: {away_score} - {home_score}"
             nodes.append(Document(text=text))
     return parser.get_nodes_from_documents(nodes)
 
@@ -131,17 +138,21 @@ if __name__ == "__main__":
     for pattern, file_type in file_patterns.items():
         pattern_path = os.path.join(data_folder, pattern)
         matching_files = glob.glob(pattern_path)
+        print(pattern_path)
         for file_path in matching_files:
             print(f"Processing file: {file_path}")
             indices[file_path] = process_and_index(file_path, file_type)
+    print ("Indexing completed successfully")
 
     # testing queries
-    queries = [
-        "Who played third base for the Yankees?",
-        "What happened in the 4th inning?",
-        "When is the next game for the Yankees?",
-    ]
-    for query in queries:
-        for file_path, index in indices.items():
-            response = query_index(index, query)
-            print(f"Query: {query} (from {file_path})\nResponse: {response}\n")
+    '''
+        queries = [
+            "Who played third base for the Yankees?",
+            "What happened in the 4th inning?",
+            "When is the next game for the Yankees?",
+        ]
+        for query in queries:
+            for file_path, index in indices.items():
+                response = query_index(index, query)
+                print(f"Query: {query} (from {file_path})\nResponse: {response}\n")
+        '''        
