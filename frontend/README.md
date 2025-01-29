@@ -1,70 +1,174 @@
-# Getting Started with Create React App
+# Frontend Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to the **Frontend Application** repository! This project is built using React and provides a robust platform for video capture, analysis, and speech recognition with a modern and responsive design.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [Features](#features)
+3. [Technologies Used](#technologies-used)
+4. [Project Structure](#project-structure)
+5. [Getting Started](#getting-started)
+6. [Scripts](#scripts)
+7. [Deployment](#deployment)
+8. [Contributing](#contributing)
+9. [License](#license)
+10. [Contact](#contact)
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Project Overview
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+This project leverages **React** to create an intuitive and responsive web application. It integrates functionalities such as video capture, real-time speech recognition, and backend API communication for data processing. The application is designed for seamless deployment with **Docker**.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Features
+- Webcam video capture powered by **react-webcam**.
+- Real-time speech-to-text functionality using **react-speech-recognition**.
+- A clean and responsive user interface built with **Material-UI**.
+- Backend API communication using **Axios**.
+- Progressive Web App (PWA) capabilities.
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Technologies Used
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Core Dependencies
+- **React**: Core framework for building the user interface.
+- **Material-UI (`@mui/material`)**: Modern and responsive UI components.
+- **Emotion (`@emotion/react` and `@emotion/styled`)**: For CSS-in-JS styling.
+- **Axios**: Handles HTTP requests to backend APIs.
+- **react-webcam**: For webcam integration and video stream capture.
+- **react-speech-recognition**: Real-time speech recognition functionality.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Development Tools
+- **React Scripts**: Simplifies the development workflow.
+- **Docker**: For containerization and scalable deployment.
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Project Structure
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+frontend/
+├── public/
+│   ├── favicon.ico
+│   ├── index.html
+│   ├── logo192.png
+│   ├── logo512.png
+│   ├── manifest.json
+│   └── robots.txt
+├── src/
+│   ├── components/
+│   │   ├── AnalysisResult.js
+│   │   └── VideoCapture.js
+│   ├── pages/
+│   │   └── MainPage.js
+│   ├── services/
+│   │   └── api.js
+│   ├── App.css
+│   ├── App.js
+│   ├── App.test.js
+│   ├── index.css
+│   ├── index.js
+│   ├── logo.svg
+│   ├── reportWebVitals.js
+│   └── setupTests.js
+├── package.json
+├── package-lock.json
+├── .gitignore
+├── Dockerfile
+└── README.md
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Key Directories
+- **`public/`**: Contains static assets and the root HTML file.
+- **`src/`**: Holds the core application logic and components.
+  - **`components/`**: Modular React components for specific functionalities.
+  - **`pages/`**: High-level page components for layout and routing.
+  - **`services/`**: API service layer to interact with the backend.
+- **`Dockerfile`**: Configuration for creating a Docker container.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## Getting Started
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Prerequisites
+- Node.js (v14 or higher)
+- npm (v6 or higher) or yarn
+- Docker (optional, for containerized deployment)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the development server:
+   ```bash
+   npm start
+   ```
 
-### Code Splitting
+The application will be available at `http://localhost:3000/`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## Scripts
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Available Commands
+- **`npm start`**: Runs the app in development mode with hot reloading.
+- **`npm run build`**: Builds the app for production and outputs files to the `build` folder.
+- **`npm test`**: Launches the test runner in interactive watch mode.
+- **`npm run eject`**: Ejects the app from Create React App (irreversible action).
 
-### Making a Progressive Web App
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Deployment
 
-### Advanced Configuration
+### Docker Deployment
+1. Build the Docker image:
+   ```bash
+   docker build -t frontend-app .
+   ```
+2. Run the container:
+   ```bash
+   docker run -p 3000:3000 frontend-app
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+The application will be accessible at `http://localhost:3000/`.
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Contributing
 
-### `npm run build` fails to minify
+1. Fork the repository.
+2. Create a feature branch:
+   ```bash
+   git checkout -b feature-name
+   ```
+3. Commit your changes:
+   ```bash
+   git commit -m "Add a descriptive commit message"
+   ```
+4. Push the branch:
+   ```bash
+   git push origin feature-name
+   ```
+5. Open a Pull Request.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+
+## License
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## Contact
+
+For questions or feedback, feel free to contact the repository maintainers or open an issue.
