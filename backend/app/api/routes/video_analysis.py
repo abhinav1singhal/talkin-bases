@@ -11,4 +11,4 @@ async def analyze_video_route(video: UploadFile = File(...), question: str = For
 
 @router.get("/health")
 async def health_check():
-    return {"status": "OK app halth os okay"}
+    return {"status": "OK app halth is okay"}
