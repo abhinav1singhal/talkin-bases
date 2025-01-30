@@ -44,16 +44,34 @@ def search_qdrant(collection_name, query_vector, top_k=5):
     return [hit.payload for hit in response]
 
 # Define a function to generate responses using Gemini
-def generate_response(prompt, context):
+def generate_response(video_content,user_question, context):
      if not any(context.values()):
         full_prompt = f"""
-        {prompt} No specific context was found in the database. Please use your general knowledge to provide an accurate response. Be as factual and up-to-date as possible, and clearly state if any information might be uncertain or speculative.
+        {user_question} No specific context was found in the database. Please use your general knowledge to provide an accurate response. Be as factual and up-to-date as possible, and clearly state if any information might be uncertain or speculative.
         """
      else:
         logging.info(f"Context Info:{context}")
-        full_prompt = f"{prompt}\n\nContext:\n{json.dumps(context, indent=2)}"
+
+        # Read video file
+        #with open(video_content, 'rb') as f:
+        #    video_content = f.read()
+
+
+        #full_prompt = f"{user_query}\n\nContext:\n{json.dumps(context, indent=2)}"
+        full_prompt=f"""
+                    Watch the video carefully and consider the following context:
+                    {context}
+
+                    Now, answer this question:
+                    {user_question}
+
+                    Base your answer on both the information in the video and the provided context.
+                    Be concise and to the point.
+                    """
         model = genai.GenerativeModel('gemini-1.5-flash')
-        response = model.generate_content(full_prompt)
+        response = model.generate_content([full_prompt,
+                                            {"mime_type": "video/mp4", "data": video_content}
+                                        ])
         return response.text
 
 def get_embedding(text):
@@ -69,7 +87,7 @@ def process_context(context):
             processed.append(item['_node_content'])
     return processed
 # Main RAG pipeline function
-def rag_pipeline(user_query, query_vector):
+def rag_pipeline(video_content,user_query, query_vector):
     # Step 1: Retrieve data from Qdrant collections
     player_info = search_qdrant("player_details", query_vector)
     teams_info = search_qdrant("roster", query_vector)
@@ -93,14 +111,14 @@ def rag_pipeline(user_query, query_vector):
     logging.info(context)
 
     # Step 3: Generate an engaging response using Gemini
-    response = generate_response(user_query, context)
+    response = generate_response(video_content,user_query, context)
 
     logging.info("Generated Response:")
     logging.info(response)
     return response
 
 # Example usage
-user_query = "Tell me about match played in September 13 2024 at Yankee sadium.Mention the date so that I can check the facts in your response"
+#user_query = "Tell me about match played in September 13 2024 at Yankee sadium.Mention the date so that I can check the facts in your response"
 
 def rag_chat(video_content, question):
     try:
@@ -110,5 +128,6 @@ def rag_chat(video_content, question):
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
     assert len(query_vector) == 768, f"Expected 768 dimensions, got {len(query_vector)}"
-    response = rag_pipeline(question, query_vector)
-    print(response)
+    response = rag_pipeline(video_content,question, query_vector)
+    logging.info(f"Generate response from rag_chat: {response}")
+    return response

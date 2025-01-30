@@ -7,9 +7,10 @@ genai.configure(api_key=GOOGLE_API_KEY)
 
 def analyze_video(video_content, question):
     model = genai.GenerativeModel('gemini-1.5-flash')
+    logging.info(f"analyze_video question:  {question}")
 
     response=rag_service.rag_chat(video_content, question)
-    logging.info(f"Rag respopnse:  {response}")
+    logging.info(f"analyze_video respopnse:  {response}")
 
     '''
     prompt = f"""

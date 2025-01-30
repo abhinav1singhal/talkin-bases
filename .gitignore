@@ -4,3 +4,4 @@
 /backend/.env
 *.pyc
 notes.txt
+*.zip
