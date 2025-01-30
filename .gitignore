@@ -2,3 +2,5 @@
 /frontend/node_modules/
 /backend/app/backenv/
 /backend/.env
+*.pyc
+notes.txt
