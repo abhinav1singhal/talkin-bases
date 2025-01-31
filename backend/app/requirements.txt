@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+python-multipart
+python-dotenv
+llama-index
+qdrant-client
+google-generativeai
+llama-index-embeddings-gemini
+llama-index-multi-modal-llms-gemini

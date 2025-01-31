@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://127.0.0.1:8000/api';
+const API_BASE_URL = 'https://talkin-bases-454636469344.us-central1.run.app/api';
 
 export const analyzeVideo = async (videoBlob, question) => {
   const formData = new FormData();

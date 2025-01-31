@@ -13,7 +13,7 @@ const VideoCapture = ({ onVideoCapture }) => {
   const [question, setQuestion] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
-
+  const [facingMode, setFacingMode] = useState("user");
   const handleCameraToggle = () => {
     setIsCameraOn(!isCameraOn);
   };
@@ -65,6 +65,10 @@ const VideoCapture = ({ onVideoCapture }) => {
     return <span>Browser does not support speech recognition.</span>;
   }
 
+  const toggleCamera = () => {
+    setFacingMode(prevMode => prevMode === "user" ? "environment" : "user");
+  };
+
   return (
     <Grid container direction="column" spacing={2}>
       <Grid item>
@@ -75,7 +79,12 @@ const VideoCapture = ({ onVideoCapture }) => {
       {isCameraOn && (
         <>
           <Grid item>
-            <Webcam audio={false} ref={webcamRef} />
+            <Webcam audio={false} ref={webcamRef} videoConstraints={{ facingMode: facingMode }}/>
+          </Grid>
+          <Grid item>
+            <Button onClick={toggleCamera}>
+              Switch to {facingMode === "user" ? "Back" : "Front"} Camera
+            </Button>
           </Grid>
           <Grid item>
             {capturing ? (
