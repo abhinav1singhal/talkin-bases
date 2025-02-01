@@ -82,6 +82,16 @@ frontend/
 ├── Dockerfile
 └── README.md
 ```
+
+### Key Directories
+- **`public/`**: Contains static assets and the root HTML file.
+- **`src/`**: Holds the core application logic and components.
+  - **`components/`**: Modular React components for specific functionalities.
+  - **`pages/`**: High-level page components for layout and routing.
+  - **`services/`**: API service layer to interact with the backend.
+- **`Dockerfile`**: Configuration for creating a Docker container.
+
+---
 ## UML Sequence Diagram
 
 ```mermaid
@@ -107,16 +117,6 @@ sequenceDiagram
     Backend-->>Frontend: Send response
     Frontend-->>User: Display result
 
-
-### Key Directories
-- **`public/`**: Contains static assets and the root HTML file.
-- **`src/`**: Holds the core application logic and components.
-  - **`components/`**: Modular React components for specific functionalities.
-  - **`pages/`**: High-level page components for layout and routing.
-  - **`services/`**: API service layer to interact with the backend.
-- **`Dockerfile`**: Configuration for creating a Docker container.
-
----
 
 ## Getting Started
 
