@@ -1,4 +1,4 @@
-# RAG Backend with FastAPI, LlamaIndex, Qdrant, and Gemini Flash 1.5
+# Talkin Bases Backend with FastAPI, LlamaIndex, Qdrant, and Gemini Flash 1.5
 
 ## Overview
 This project is a backend service implementing a **Retrieval-Augmented Generation (RAG)** system. The application uses **FastAPI** as the web framework and integrates **Qdrant** for vector embeddings storage, **LlamaIndex** for document indexing, and **Google Gemini Flash 1.5** for generative AI capabilities. The backend service is deployed on **Google Cloud Run**.
@@ -13,7 +13,7 @@ This project is a backend service implementing a **Retrieval-Augmented Generatio
 
 ## Project Structure
 ```
-backend_code/
+app/
 │-- main.py                      # Entry point of FastAPI application
 │-- requirements.txt             # List of required Python packages
 │-- core/
@@ -42,6 +42,39 @@ qdrant-client
 google-generativeai
 llama-index-embeddings-gemini
 llama-index-multi-modal-llms-gemini
+```
+## UML Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant FastAPI
+    participant VideoAnalysisRouter
+    participant RAGService
+    participant QdrantClient
+    participant LlamaIndex
+    participant GeminiService
+    participant GoogleAPI
+
+    User->>FastAPI: Sends request to /api/video_analysis
+    FastAPI->>VideoAnalysisRouter: Routes request to video_analysis.py
+    VideoAnalysisRouter->>RAGService: Calls process_video_analysis(video_data)
+    
+    RAGService->>QdrantClient: Retrieves relevant vector embeddings
+    QdrantClient-->>RAGService: Returns retrieved embeddings
+    
+    RAGService->>LlamaIndex: Uses embeddings for document retrieval
+    LlamaIndex-->>RAGService: Returns relevant document chunks
+    
+    RAGService->>GeminiService: Calls generate_response(context)
+    GeminiService->>GoogleAPI: Sends request to Gemini Flash 1.5
+    GoogleAPI-->>GeminiService: Returns AI-generated response
+    
+    GeminiService-->>RAGService: Sends generated response
+    RAGService-->>VideoAnalysisRouter: Returns response to API router
+    VideoAnalysisRouter-->>FastAPI: Sends final processed response
+    FastAPI-->>User: Sends AI-generated insights
+
 ```
 
 ### Installing Dependencies
