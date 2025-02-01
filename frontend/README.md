@@ -116,7 +116,7 @@ sequenceDiagram
     Gemini-->>Backend: Generate response
     Backend-->>Frontend: Send response
     Frontend-->>User: Display result
-
+```
 
 ## Getting Started
 
