@@ -20,6 +20,9 @@ const VideoCapture = ({ onVideoCapture }) => {
   const synthesis = useRef(window.speechSynthesis);
 
   useEffect(() => {
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    .then((stream) => console.log("Camera and mic access granted"))
+    .catch((err) => alert("Please allow camera and microphone access."));
     if ('webkitSpeechRecognition' in window) {
       recognition.current = new window.webkitSpeechRecognition();
       recognition.current.continuous = true;
@@ -47,20 +50,46 @@ const VideoCapture = ({ onVideoCapture }) => {
   };
 
   const handleStartCaptureClick = useCallback(() => {
-    setCapturing(true);
-    mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
-      mimeType: 'video/webm'
-    });
-    mediaRecorderRef.current.addEventListener('dataavailable', ({ data }) => {
-      if (data.size > 0) setRecordedChunks((prev) => prev.concat(data));
-    });
-    mediaRecorderRef.current.start();
-  }, [webcamRef]);
+    if (!window.MediaRecorder) {
+        alert("MediaRecorder API is not supported on this device.");
+        return;
+    }
 
-  const handleStopCaptureClick = useCallback(() => {
-    mediaRecorderRef.current.stop();
-    setCapturing(false);
-  }, []);
+    setCapturing(true);
+    const stream = webcamRef.current.stream;
+
+    // Detect iOS to use MP4, otherwise use WEBM
+    const mimeType = /iPhone|iPad|iPod/.test(navigator.userAgent) ? 'video/mp4' : 'video/webm';
+
+    try {
+        mediaRecorderRef.current = new MediaRecorder(stream, { mimeType });
+
+        mediaRecorderRef.current.addEventListener('dataavailable', ({ data }) => {
+            if (data.size > 0) setRecordedChunks((prev) => prev.concat(data));
+        });
+
+        mediaRecorderRef.current.start();
+    } catch (error) {
+        console.error("Error starting media recording:", error);
+    }
+}, [webcamRef]);
+
+const handleStopCaptureClick = useCallback(() => {
+  if (!mediaRecorderRef.current) return;
+
+  // Detect iPhone and enforce stop on user gesture
+  if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+      const stopRecording = () => {
+          mediaRecorderRef.current.stop();
+          setCapturing(false);
+      };
+      document.body.addEventListener("click", stopRecording, { once: true });
+  } else {
+      // Normal stop recording for Android (Pixel)
+      mediaRecorderRef.current.stop();
+      setCapturing(false);
+  }
+}, []);
 
   const handleFinalizeVideo = () => {
     if (recordedChunks.length) {
@@ -131,7 +160,9 @@ const VideoCapture = ({ onVideoCapture }) => {
           </Grid>
           <Grid item>
             {capturing ? (
-              <Button onClick={handleStopCaptureClick}>Stop Recording</Button>
+              <Button onTouchStart={handleStopCaptureClick} // Ensures it works on touch devices
+              onClick={handleStopCaptureClick}
+              style={{ cursor: "pointer", touchAction: "manipulation" }}>Stop Recording</Button>
             ) : (
               <Button onClick={handleStartCaptureClick}>Start Recording</Button>
             )}
@@ -142,10 +173,11 @@ const VideoCapture = ({ onVideoCapture }) => {
         </>
       )}
       <Grid item>
-        <Select value={selectedLanguage} onChange={handleLanguageChange}>
+        <Select value={selectedLanguage} onChange={handleLanguageChange} style={{ marginBottom: '10px' }}>
           <MenuItem value="en-US">English</MenuItem>
           <MenuItem value="hi-IN">Hindi</MenuItem>
           <MenuItem value="vi-VN">Vietnamese</MenuItem>
+          <MenuItem value="zh-CN">Mandarin (Chinese)</MenuItem>
           <MenuItem value="es-ES">Spanish</MenuItem>
         </Select>
       </Grid>

@@ -3,6 +3,7 @@ import { Container, Typography } from '@mui/material';
 import VideoCapture from '../components/VideoCapture';
 import AnalysisResult from '../components/AnalysisResult';
 import { analyzeVideo } from '../services/api';
+import logo from '../assets/logo.png';
 
 const MainPage = () => {
   const [analysisResult, setAnalysisResult] = useState('');
@@ -25,7 +26,11 @@ const MainPage = () => {
 
   return (
     <Container maxWidth="md">
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" 
+      gutterBottom
+      component="div" 
+      style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+         <img src={logo} alt="Talkin' Bases Logo" width="80" height="80" />
         Talkin Bases
       </Typography>
       <VideoCapture onVideoCapture={handleVideoCapture} />
