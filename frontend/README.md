@@ -82,6 +82,31 @@ frontend/
 ├── Dockerfile
 └── README.md
 ```
+## UML Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend as Talkin' Bases Frontend (React)
+    participant Backend as Talkin' Bases Backend (Cloud Run)
+    participant Gemini as Gemini AI
+    participant Qdrant as Qdrant Vector DB
+
+    User->>Frontend: Start recording (handleStartCaptureClick)
+    User->>Frontend: Stop recording (handleStopCaptureClick)
+    User->>Frontend: Retake video (handleFinalizeVideo)
+    User->>Frontend: Start speaking (handleStartListening)
+    User->>Frontend: Stop speaking (handleStopListening)
+    User->>Frontend: Enter question (setQuestion)
+    User->>Frontend: Send video + question (handleAnalyze)
+    Frontend->>Backend: Upload video + question (analyzeVideo)
+    Backend->>Gemini: Process video + question
+    Gemini->>Qdrant: Retrieve relevant data
+    Qdrant-->>Gemini: Return vector search results
+    Gemini-->>Backend: Generate response
+    Backend-->>Frontend: Send response
+    Frontend-->>User: Display result
+
 
 ### Key Directories
 - **`public/`**: Contains static assets and the root HTML file.

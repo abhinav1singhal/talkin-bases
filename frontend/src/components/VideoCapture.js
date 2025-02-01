@@ -1,7 +1,6 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import Webcam from 'react-webcam';
-import { Button, Grid, TextField, List, ListItem, Paper, Typography } from '@mui/material';
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import { Button, Grid, TextField, List, ListItem, Paper, Typography, Select, MenuItem } from '@mui/material';
 
 const VideoCapture = ({ onVideoCapture }) => {
   const webcamRef = useRef(null);
@@ -12,10 +11,39 @@ const VideoCapture = ({ onVideoCapture }) => {
   const [videoBlob, setVideoBlob] = useState(null);
   const [question, setQuestion] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
-  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
   const [facingMode, setFacingMode] = useState("user");
+  const [selectedLanguage, setSelectedLanguage] = useState('en-US');
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+
+  const recognition = useRef(null);
+  const synthesis = useRef(window.speechSynthesis);
+
+  useEffect(() => {
+    if ('webkitSpeechRecognition' in window) {
+      recognition.current = new window.webkitSpeechRecognition();
+      recognition.current.continuous = true;
+      recognition.current.interimResults = true;
+      recognition.current.onresult = (event) => {
+        const transcript = Array.from(event.results)
+          .map(result => result[0])
+          .map(result => result.transcript)
+          .join('');
+        setQuestion(transcript);
+      };
+      recognition.current.onend = () => setIsListening(false);
+    }
+  }, []);
+
   const handleCameraToggle = () => {
     setIsCameraOn(!isCameraOn);
+  };
+
+  const handleLanguageChange = (event) => {
+    setSelectedLanguage(event.target.value);
+    if (recognition.current) {
+      recognition.current.lang = event.target.value;
+    }
   };
 
   const handleStartCaptureClick = useCallback(() => {
@@ -44,29 +72,40 @@ const VideoCapture = ({ onVideoCapture }) => {
 
   const handleAnalyze = useCallback(async () => {
     if (videoBlob && question) {
-      const result = await onVideoCapture(videoBlob, question); // Await the result here.
-      setChatHistory((prev) => [...prev, { question, answer: result }]); // Append new entry to the history.
-      setQuestion(''); // Clear the question input.
+      const result = await onVideoCapture(videoBlob, question);
+      setChatHistory((prev) => [...prev, { question, answer: result }]);
+      speakResponse(result);
+      setQuestion('');
     }
   }, [videoBlob, question, onVideoCapture]);
-  
 
   const handleStartListening = () => {
-    resetTranscript();
-    SpeechRecognition.startListening({ continuous: true });
+    if (recognition.current) {
+      recognition.current.start();
+      setIsListening(true);
+    }
   };
 
   const handleStopListening = () => {
-    SpeechRecognition.stopListening();
-    setQuestion(transcript);
+    if (recognition.current) {
+      recognition.current.stop();
+      setIsListening(false);
+    }
   };
-
-  if (!browserSupportsSpeechRecognition) {
-    return <span>Browser does not support speech recognition.</span>;
-  }
 
   const toggleCamera = () => {
     setFacingMode(prevMode => prevMode === "user" ? "environment" : "user");
+  };
+
+  const speakResponse = (text) => {
+    if (synthesis.current) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = selectedLanguage;
+      utterance.voice = synthesis.current.getVoices().find(voice => voice.lang === selectedLanguage && voice.gender === 'female');
+      setIsSpeaking(true);
+      utterance.onend = () => setIsSpeaking(false);
+      synthesis.current.speak(utterance);
+    }
   };
 
   return (
@@ -79,7 +118,11 @@ const VideoCapture = ({ onVideoCapture }) => {
       {isCameraOn && (
         <>
           <Grid item>
-            <Webcam audio={false} ref={webcamRef} videoConstraints={{ facingMode: facingMode }}/>
+            <Webcam
+              audio={false}
+              ref={webcamRef}
+              videoConstraints={{ facingMode: facingMode }}
+            />
           </Grid>
           <Grid item>
             <Button onClick={toggleCamera}>
@@ -99,10 +142,16 @@ const VideoCapture = ({ onVideoCapture }) => {
         </>
       )}
       <Grid item>
+        <Select value={selectedLanguage} onChange={handleLanguageChange}>
+          <MenuItem value="en-US">English</MenuItem>
+          <MenuItem value="hi-IN">Hindi</MenuItem>
+          <MenuItem value="vi-VN">Vietnamese</MenuItem>
+          <MenuItem value="es-ES">Spanish</MenuItem>
+        </Select>
+      </Grid>
+      <Grid item>
         <TextField
           fullWidth
-          label="Ask a question about the video"
-          variant="outlined"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           disabled={!videoBlob}
@@ -114,29 +163,28 @@ const VideoCapture = ({ onVideoCapture }) => {
         </Button>
       </Grid>
       <Grid item>
-        <Button onClick={handleStartListening} disabled={listening}>
+        <Button onClick={handleStartListening} disabled={isListening}>
           Start Voice Input
         </Button>
-        <Button onClick={handleStopListening} disabled={!listening}>
+        <Button onClick={handleStopListening} disabled={!isListening}>
           Stop Voice Input
         </Button>
       </Grid>
       <Grid item>
-        <Typography variant="h6">Chat History</Typography>
-        <List style={{ maxHeight: '300px', overflowY: 'auto', border: '1px solid #ccc', borderRadius: '8px', padding: '1rem' }}>
-          {chatHistory.map((chat, index) => (
-            <ListItem key={index} style={{ marginBottom: '1rem' }}>
-              <Paper style={{ padding: '1rem', width: '100%' }}>
-                <Typography variant="body1">
-                  <strong>Q:</strong> {chat.question}
+        <Paper>
+          <List>
+            <Typography variant="h6">Chat History</Typography>
+            {chatHistory.map((chat, index) => (
+              <ListItem key={index}>
+                <Typography>
+                  Q: {chat.question}
+                  <br />
+                  A: {chat.answer}
                 </Typography>
-                <Typography variant="body2" style={{ marginTop: '0.5rem' }}>
-                  <strong>A:</strong> {chat.answer}
-                </Typography>
-              </Paper>
-            </ListItem>
-          ))}
-        </List>
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
       </Grid>
     </Grid>
   );

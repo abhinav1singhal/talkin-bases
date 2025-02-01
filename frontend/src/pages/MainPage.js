@@ -26,7 +26,7 @@ const MainPage = () => {
   return (
     <Container maxWidth="md">
       <Typography variant="h4" gutterBottom>
-        Video Capture and Analysis
+        Talkin Bases
       </Typography>
       <VideoCapture onVideoCapture={handleVideoCapture} />
       {isLoading && <Typography>Analyzing video...</Typography>}
