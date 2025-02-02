@@ -1,4 +1,4 @@
-# Talkin' Bases: A Baseball AI Analysis System
+# Talkin' Bases: Gemini Flash 1.5 Based Fan Interation AI System
 
 ## Overview
 Talkin' Bases is an AI-powered baseball analysis system that captures user questions, processes them through a Retrieval-Augmented Generation (RAG) backend, and provides insightful responses using **Google Gemini Flash 1.5**. The system integrates:
