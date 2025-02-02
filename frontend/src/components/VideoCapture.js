@@ -23,10 +23,15 @@ const VideoCapture = ({ onVideoCapture }) => {
     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
     .then((stream) => console.log("Camera and mic access granted"))
     .catch((err) => alert("Please allow camera and microphone access."));
-    if ('webkitSpeechRecognition' in window) {
-      recognition.current = new window.webkitSpeechRecognition();
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    if (SpeechRecognition) {
+      recognition.current = new SpeechRecognition();
       recognition.current.continuous = true;
       recognition.current.interimResults = true;
+      recognition.current.lang = selectedLanguage;
+
       recognition.current.onresult = (event) => {
         const transcript = Array.from(event.results)
           .map(result => result[0])
@@ -36,7 +41,10 @@ const VideoCapture = ({ onVideoCapture }) => {
       };
       recognition.current.onend = () => setIsListening(false);
     }
-  }, []);
+    else {
+      console.warn("Speech recognition not supported on this browser.");
+    }
+  }, [selectedLanguage]);
 
   const handleCameraToggle = () => {
     setIsCameraOn(!isCameraOn);

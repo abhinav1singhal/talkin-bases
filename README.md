@@ -34,7 +34,7 @@ Talkin' Bases is an AI-powered baseball analysis system that captures user quest
 - Step 6: Now its time to ask questions around recorded video . Click on "start voice input", You can ask questions on what's happening in video etc.
 - Step 7: Then click "stop voice input"
 - Step 8: Click on "Analyze video" button. This will send questions to Gemini flash 1.5.
-- Step 9: wait for few seconds for response it takes around 10 t0 20 sec to respond. You will see response at the bottom of screen.
+- Step 9: wait for few seconds for response it takes around 5 sec to 10 sec to respond. You will see response at the bottom of screen.
 
 ## System Architecture
 ![Workflow Diagram](images/Talkinbases-diagram.png)
