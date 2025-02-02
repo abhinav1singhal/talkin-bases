@@ -1,3 +1,4 @@
+![Workflow Diagram](images/logo.png)
 # Talkin' Bases: Gemini Flash 1.5 Based Fan Interation AI System
 
 ## Overview
