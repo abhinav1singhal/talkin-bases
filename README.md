@@ -19,6 +19,8 @@ Talkin' Bases is an AI-powered baseball analysis system that captures user quest
 ---
 
 ## System Architecture
+![Workflow Diagram](images/Talkinbases-diagram.png)
+
 
 ### **1. Frontend** (React.js - `talkin-bases-fe`)
 - **Captures user video/audio** and converts speech to text.
