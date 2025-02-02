@@ -1,6 +1,7 @@
 <p align="center">
   <img src="images/logo.png" alt="Talkin' Bases Logo" width="200"/>
 </p>
+---
 # Talkin' Bases: Gemini Flash 1.5 Based Fan Interation AI System
 
 ## Overview
