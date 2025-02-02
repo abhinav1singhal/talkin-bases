@@ -3,7 +3,7 @@
 ## Overview
 Talkin' Bases is an AI-powered baseball analysis system that captures user questions, processes them through a Retrieval-Augmented Generation (RAG) backend, and provides insightful responses using **Google Gemini Flash 1.5**. The system integrates:
 
-- ** Scope** : For the purpose for MVP , the scope of data used is for 2024 new york yankee season. Its player data and live feed from regular season games in 2024 played in yankee stadium. This scope can be enhanced to larger sets by saving data as Vector embeddings. This can be saved in Vertex AI index , or any embedding vector dbs like PineCone, Qdrant, MongoDB. In this project , I used Qdrant. (https://qdrant.tech/)
+- **Scope of project** : For the purpose for MVP , the scope of data used is for 2024 new york yankee season. Its player data and live feed from regular season games in 2024 played in yankee stadium. This scope can be enhanced to larger sets by saving data as Vector embeddings. This can be saved in Vertex AI index , or any embedding vector dbs like PineCone, Qdrant, MongoDB. In this project , I used Qdrant. (https://qdrant.tech/)
 
 - **Frontend (React.js)**: Captures video and audio input from users.
 - **Backend (FastAPI & LlamaIndex)**: Processes requests and retrieves contextual information from **Qdrant vector database**.
