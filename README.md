@@ -121,3 +121,7 @@ sequenceDiagram
 
 ## Conclusion
 This project provides a cloud-scalable **AI-powered baseball analysis** platform, integrating **video/audio capture, vector search, and generative AI** into a seamless user experience.
+
+---
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
