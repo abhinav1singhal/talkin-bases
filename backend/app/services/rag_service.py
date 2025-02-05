@@ -47,27 +47,34 @@ def search_qdrant(collection_name, query_vector, top_k=5):
 def generate_response(video_content,user_question, context):
      if not any(context.values()):
         full_prompt = f"""
-        {user_question} No specific context was found in the database. Please use your general knowledge to provide an accurate response. Be as factual and up-to-date as possible, and clearly state if any information might be uncertain or speculative.
-        """
+            {user_question} No specific context was found in the database. However, let's make this fun! Use your general knowledge to provide an accurate and engaging response. Include:
+            - A fun fact about the play, player, or sport.
+            - An interesting analogy to explain the answer.
+            - A touch of humor or a surprising twist to keep fans entertained.
+            """
      else:
         logging.info(f"Context Info:{context}")
 
         # Read video file
         #with open(video_content, 'rb') as f:
         #    video_content = f.read()
-
-
         #full_prompt = f"{user_query}\n\nContext:\n{json.dumps(context, indent=2)}"
-        full_prompt=f"""
-                    Watch the video carefully and consider the following context:
-                    {context}
+        full_prompt = f"""
+                        Watch the video carefully and consider the following context:
+                        {context}
 
-                    Now, answer this question:
-                    {user_question}
+                        Now, answer this question:
+                        {user_question}
 
-                    Base your answer on both the information in the video and the provided context.
-                    Be concise and to the point.
-                    """
+                        While answering:
+                        - Base your response on both the video and provided context.
+                        - If you can figure out the date of event happening in video then mention the event name and exact date in the response.
+                        - If you understand the game in video and date of when the game was played then mention some exact statistics for that game in response. This is critical for user engagement.
+                        - Keep the response in no longer than 40 words and no special characters in it.
+                        - Add a fun fact related to the topic or if its related to player in context then add fun fact about player involved.
+                        - Use analogies or comparisons to make the explanation relatable.
+                        - Include a surprising or humorous element to keep fans engaged.
+                        """
         model = genai.GenerativeModel('gemini-1.5-flash')
         response = model.generate_content([full_prompt,
                                             {"mime_type": "video/mp4", "data": video_content}
