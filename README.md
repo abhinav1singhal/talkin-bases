@@ -26,7 +26,7 @@ Talkin' Bases is an AI-powered baseball analysis system that captures user quest
 
 ---
 ## Steps to test
-- Step 1: Navigate to link https://talkin-bases-fe-454636469344.us-central1.run.app , this is your front end application hosted on google cloud.
+- Step 1: Navigate to link https://talkin-bases-fe-612422311209.us-central1.run.app , this is your front end application hosted on google cloud.
 - Step 2: Turn on camera 
 - Step 3 , switch to front "facing camera" or "back camera" based on what device you are using.
 - Step 4: click on "start recording" the video and then "stop recording" to capture video
